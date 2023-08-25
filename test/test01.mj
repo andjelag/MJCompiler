@@ -1,0 +1,15 @@
+program Program
+const int pi = 3, e = 2;
+int a, b;
+{
+void main() int i; int x[]; char ch; {
+		x = new int[3];
+		i = 0;
+		a = 3;
+		x[i] = i + 2;
+		x[i+1] = i * a;
+		print(x[i]);
+		print(x[i+1]);
+		print(pi);
+	}
+}

@@ -1,0 +1,287 @@
+package rs.ac.bg.etf.pp1;
+
+import java_cup.runtime.*;
+import org.apache.log4j.*;
+import rs.ac.bg.etf.pp1.ast.*;
+
+parser code {:
+
+	boolean errorDetected = false;
+	
+	Logger log = Logger.getLogger(getClass());
+   
+   
+    // slede redefinisani metodi za prijavu gresaka radi izmene teksta poruke
+     
+    public void report_fatal_error(String message, Object info) throws java.lang.Exception {
+      done_parsing();
+      report_error(message, info);
+    }
+  
+    public void syntax_error(Symbol cur_token) {
+        report_error("\nSintaksna greska", cur_token);
+    }
+  
+    public void unrecovered_syntax_error(Symbol cur_token) throws java.lang.Exception {
+        report_fatal_error("Fatalna greska, parsiranje se ne moze nastaviti", cur_token);
+    }
+
+    public void report_error(String message, Object info) {
+    	errorDetected = true;
+    	StringBuilder msg = new StringBuilder(message); 
+    	if (info instanceof Symbol)
+            msg.append (" na liniji ").append(((Symbol)info).left);
+        log.error(msg.toString());
+    }
+    
+    public void report_info(String message, Object info) {
+    	StringBuilder msg = new StringBuilder(message); 
+    	if (info instanceof Symbol)
+            msg.append (" na liniji ").append(((Symbol)info).left);
+        log.info(msg.toString());
+    }
+    
+:}
+
+scan with {:
+	Symbol s = this.getScanner().next_token();
+	if (s != null && s.value != null) 
+		log.info(s.toString() + " " + s.value.toString());
+	return s;
+:}
+
+terminal PLUS, RBRACE, RPAREN, EQUAL, SEMI, LPAREN, LBRACE, COMMA, PERIOD;
+terminal PROG, PRINT, VOID, CONST, NEW, READ;
+terminal MINUS, TIMES, SOLIDUS, MODULUS;
+terminal INC, DEC, LSQUAR, RSQUAR;
+terminal FINDANY;
+
+terminal Integer NUMBER;
+terminal String IDENT;
+terminal Character CHAR;
+terminal Boolean BOOL;
+
+nonterminal Program, ProgDeclList, ConstDeclList, VarDeclList, ConstDecl, VarDecl;
+nonterminal MethodDecl, TypeOrVoid, OptionalLocalVarDecl, StatementList, Statement, DesignatorStatement;
+nonterminal Assignop, OptionalConstant, Addop, Mulop, LocalVarDeclList, DesignatorAssignStatement;
+nonterminal LastVarDecl, BeforeLastVarDecl, LocalVarDecl, BeforeLastLocalVarDecl, LastLocalVarDecl, BeforeLastConstDecl, LastConstDecl;
+nonterminal VarDeclType, LocalVarDeclType, ConstDeclType;
+
+// nonterminal FormPar, FormParsList, FormPars, MethodDeclList;
+
+nonterminal rs.etf.pp1.symboltable.concepts.Obj ProgName;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Type;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj MethodName;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj Designator;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Expr;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Factor;
+nonterminal rs.etf.pp1.symboltable.concepts.Struct Term;
+nonterminal rs.etf.pp1.symboltable.concepts.Obj IdentForArrayWhenUsingElement;
+
+Program ::= (Program) PROG ProgName ProgDeclList LBRACE MethodDecl RBRACE
+;
+
+ProgName ::= (ProgName) IDENT:progName
+;
+
+ProgDeclList ::= (ProgramConstDeclarations) ProgDeclList ConstDecl
+				|
+				(ProgramVarDeclarations) ProgDeclList VarDecl
+				|
+				(NoDeclarations) /*epsilon*/
+				;
+				
+ConstDecl ::= (ConstDeclarations) CONST ConstDeclType ConstDeclList
+;
+
+ConstDeclType ::= (ConstDeclType) Type:constDeclType 
+;
+				
+ConstDeclList ::= (MulitpleConstants) BeforeLastConstDecl ConstDeclList
+				|
+				(OneConstant) LastConstDecl
+;
+			
+BeforeLastConstDecl ::= (BeforeLastConstNumber) IDENT:constName Assignop NUMBER:value COMMA
+						|
+						 (BeforeLastConstChar) IDENT:constName Assignop CHAR:value COMMA
+						|
+						 (BeforeLastConstBool) IDENT:constName Assignop BOOL:value COMMA
+						;
+
+LastConstDecl ::=	(LastConstNumber) IDENT:constName Assignop NUMBER:value SEMI
+			|
+			 (LastConstChar) IDENT:constName Assignop CHAR:value SEMI
+			|
+			 (LastConstBool) IDENT:constName Assignop BOOL:value SEMI
+			;
+
+VarDecl ::= (VarDeclarations) VarDeclType VarDeclList
+;
+
+VarDeclType ::= (VarDeclType) Type:varType
+;
+
+VarDeclList ::= (MulitpleVariables) BeforeLastVarDecl VarDeclList
+				|
+				(OneVariable) LastVarDecl
+;
+
+LocalVarDecl ::= (LocalVarDeclarations) LocalVarDeclType LocalVarDeclList
+;
+
+LocalVarDeclType ::= (LocalVarDeclType) Type:localVarDeclType
+;
+
+LocalVarDeclList ::= (LocalMultipleVariables) BeforeLastLocalVarDecl LocalVarDeclList
+					|
+					(LocalOneVariable) LastLocalVarDecl
+;
+
+BeforeLastVarDecl ::= (BeforeLastVarDeclNotArray) IDENT:varName COMMA
+				| 
+				(BeforeLastVarDeclIsArray) IDENT:varName LSQUAR RSQUAR COMMA
+				|
+				(ErrorInBeforeLastVarDeclarationStatement) error COMMA:l {: parser.report_error("Izvrsen oporavak od greske pri deklaraciji globalne promenljive do , na liniji "+lleft, null); :}
+;
+
+LastVarDecl ::=	(LastVarDeclNotArray) IDENT:varName SEMI
+				| 
+				(LastVarDeclIsArray) IDENT:varName LSQUAR RSQUAR SEMI
+				|
+				(ErrorInLastVarDeclarationStatement) error SEMI:l {: parser.report_error("Izvrsen oporavak od greske pri deklaraciji globalne promenljive do ; na liniji "+lleft, null); :}
+;
+
+BeforeLastLocalVarDecl ::= (BeforeLastLocalVarDeclNotArray) IDENT:varName COMMA
+				| 
+				(BeforeLastLocalVarDeclIsArray) IDENT:varName LSQUAR RSQUAR COMMA
+;
+
+LastLocalVarDecl ::=	(LastLocalVarDeclNotArray) IDENT:varName SEMI
+				| 
+				(LastLocalVarDeclIsArray) IDENT:varName LSQUAR RSQUAR SEMI
+;
+
+		
+//MethodDeclList ::= (HasMethodDeclarations) MethodDeclList MethodDecl
+//				|
+//				 (NoMethodDeclarations) /*epsilon*/
+//				;
+
+				
+MethodDecl ::= (MethodDecl) TypeOrVoid:retType MethodName:methodName LPAREN RPAREN OptionalLocalVarDecl LBRACE StatementList RBRACE
+;
+
+MethodName ::= (MethodName) IDENT:methodName
+;
+
+TypeOrVoid ::= (HasType) Type
+			|
+			(NoType) VOID
+			;
+			
+			
+OptionalLocalVarDecl ::= (OptionalVariables) OptionalLocalVarDecl LocalVarDecl
+					|
+					 (NoOptonalVariables) /*epsilon*/
+					;
+
+
+//FormPars ::= (HasFormalParameters) FormParsList
+//			|
+//			(NoFormalParameters) /*epsilon*/
+//;
+
+//FormParsList ::= (FormalParametersList) FormPars COMMA FormPar 
+//				| 
+//				 (FormalParameterOne) FormPar
+//				;
+
+//FormPar ::= (FormalParameter) Type IDENT
+//			| 
+//			(FormalParameterIsArray) Type IDENT LSQUAR RSQUAR
+//			;
+
+					
+StatementList ::= (Statements)StatementList Statement
+				|
+				 (NoStatements) /*epsilon*/
+				;	
+				
+Statement ::= (StatementDesignator) DesignatorStatement 
+			|
+			 (StatementRead) READ LPAREN Designator RPAREN SEMI
+			|
+			 (StatementPrint) PRINT LPAREN Expr OptionalConstant RPAREN SEMI
+			|
+			 (StatementFindAny) Designator Assignop Designator PERIOD FINDANY LPAREN Expr RPAREN SEMI
+			;
+			
+OptionalConstant ::= (HasOptionalConstant) COMMA NUMBER
+					|
+					(NoOptionalConstant) /*epsilon*/
+					;
+			
+DesignatorStatement ::= (DesignatorStatementAssignment) DesignatorAssignStatement
+					|
+					 (DesignatorStatementIncrement) Designator:dest INC SEMI
+					|
+					 (DesignatorStatementDecrement) Designator:dest DEC SEMI
+					;
+					
+DesignatorAssignStatement ::= (DesignatorAssign) Designator:dest Assignop Expr:e SEMI
+							|
+							(ErrorInAssignment)  error SEMI:l {: parser.report_error("Izvrsen oporavak od greske pri iskazu dodele na liniji "+lleft, null); :}
+;
+
+Expr ::= (MultipleTerms) Expr Addop Term
+		|
+		 (SinglePositiveTerm) Term 
+		|
+		 (SingleNegativeTerm) MINUS Term
+		;
+				
+Term ::= (MultipleFactors) Term Mulop Factor
+		|
+		(SingleFactor) Factor
+;
+
+
+Factor ::= (FactorDesignator) Designator					
+		|
+		 (FactorNumber) NUMBER
+		|
+		 (FactorChar) CHAR
+		|
+		 (FactorBool) BOOL
+		|
+		 (FactorNewConstructor) NEW Type LSQUAR Expr RSQUAR
+		|
+		 (FactorInParanthesis) LPAREN Expr RPAREN
+		;
+		
+Designator ::= 	(ArrayElementDesignator) IdentForArrayWhenUsingElement:ident LSQUAR Expr:expr RSQUAR
+				|
+				(NotArrayElementDesignator) IDENT:ident
+				;		
+				
+IdentForArrayWhenUsingElement ::= (IdentForArrayWhenUsingElement) IDENT:ident
+;
+				
+Assignop ::= (OpEqual) EQUAL
+;
+		
+Addop ::= (OpPlus) PLUS 
+		|
+		(OpMinus) MINUS
+		;
+
+Mulop ::= (OpTimes) TIMES
+		|
+		(OpSolidus) SOLIDUS
+		|
+		(OpModulus) MODULUS
+		;
+		
+Type ::= (Type) IDENT:typeName
+;

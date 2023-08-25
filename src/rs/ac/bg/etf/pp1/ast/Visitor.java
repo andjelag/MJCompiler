@@ -1,0 +1,111 @@
+// generated with ast extension for cup
+// version 0.8
+// 24/7/2023 18:37:23
+
+
+package rs.ac.bg.etf.pp1.ast;
+
+public interface Visitor { 
+
+    public void visit(BeforeLastVarDecl BeforeLastVarDecl);
+    public void visit(Mulop Mulop);
+    public void visit(DesignatorAssignStatement DesignatorAssignStatement);
+    public void visit(Assignop Assignop);
+    public void visit(LastLocalVarDecl LastLocalVarDecl);
+    public void visit(ProgDeclList ProgDeclList);
+    public void visit(StatementList StatementList);
+    public void visit(LastVarDecl LastVarDecl);
+    public void visit(Addop Addop);
+    public void visit(BeforeLastLocalVarDecl BeforeLastLocalVarDecl);
+    public void visit(Factor Factor);
+    public void visit(OptionalLocalVarDecl OptionalLocalVarDecl);
+    public void visit(Designator Designator);
+    public void visit(Term Term);
+    public void visit(ConstDeclList ConstDeclList);
+    public void visit(BeforeLastConstDecl BeforeLastConstDecl);
+    public void visit(LocalVarDecl LocalVarDecl);
+    public void visit(VarDeclList VarDeclList);
+    public void visit(Expr Expr);
+    public void visit(OptionalConstant OptionalConstant);
+    public void visit(TypeOrVoid TypeOrVoid);
+    public void visit(LastConstDecl LastConstDecl);
+    public void visit(DesignatorStatement DesignatorStatement);
+    public void visit(Statement Statement);
+    public void visit(VarDecl VarDecl);
+    public void visit(ConstDecl ConstDecl);
+    public void visit(LocalVarDeclList LocalVarDeclList);
+    public void visit(Type Type);
+    public void visit(OpModulus OpModulus);
+    public void visit(OpSolidus OpSolidus);
+    public void visit(OpTimes OpTimes);
+    public void visit(OpMinus OpMinus);
+    public void visit(OpPlus OpPlus);
+    public void visit(OpEqual OpEqual);
+    public void visit(IdentForArrayWhenUsingElement IdentForArrayWhenUsingElement);
+    public void visit(NotArrayElementDesignator NotArrayElementDesignator);
+    public void visit(ArrayElementDesignator ArrayElementDesignator);
+    public void visit(FactorInParanthesis FactorInParanthesis);
+    public void visit(FactorNewConstructor FactorNewConstructor);
+    public void visit(FactorBool FactorBool);
+    public void visit(FactorChar FactorChar);
+    public void visit(FactorNumber FactorNumber);
+    public void visit(FactorDesignator FactorDesignator);
+    public void visit(SingleFactor SingleFactor);
+    public void visit(MultipleFactors MultipleFactors);
+    public void visit(SingleNegativeTerm SingleNegativeTerm);
+    public void visit(SinglePositiveTerm SinglePositiveTerm);
+    public void visit(MultipleTerms MultipleTerms);
+    public void visit(ErrorInAssignment ErrorInAssignment);
+    public void visit(DesignatorAssign DesignatorAssign);
+    public void visit(DesignatorStatementDecrement DesignatorStatementDecrement);
+    public void visit(DesignatorStatementIncrement DesignatorStatementIncrement);
+    public void visit(DesignatorStatementAssignment DesignatorStatementAssignment);
+    public void visit(NoOptionalConstant NoOptionalConstant);
+    public void visit(HasOptionalConstant HasOptionalConstant);
+    public void visit(StatementFindAny StatementFindAny);
+    public void visit(StatementPrint StatementPrint);
+    public void visit(StatementRead StatementRead);
+    public void visit(StatementDesignator StatementDesignator);
+    public void visit(NoStatements NoStatements);
+    public void visit(Statements Statements);
+    public void visit(NoOptonalVariables NoOptonalVariables);
+    public void visit(OptionalVariables OptionalVariables);
+    public void visit(NoType NoType);
+    public void visit(HasType HasType);
+    public void visit(MethodName MethodName);
+    public void visit(MethodDecl MethodDecl);
+    public void visit(LastLocalVarDeclIsArray LastLocalVarDeclIsArray);
+    public void visit(LastLocalVarDeclNotArray LastLocalVarDeclNotArray);
+    public void visit(BeforeLastLocalVarDeclIsArray BeforeLastLocalVarDeclIsArray);
+    public void visit(BeforeLastLocalVarDeclNotArray BeforeLastLocalVarDeclNotArray);
+    public void visit(ErrorInLastVarDeclarationStatement ErrorInLastVarDeclarationStatement);
+    public void visit(LastVarDeclIsArray LastVarDeclIsArray);
+    public void visit(LastVarDeclNotArray LastVarDeclNotArray);
+    public void visit(ErrorInBeforeLastVarDeclarationStatement ErrorInBeforeLastVarDeclarationStatement);
+    public void visit(BeforeLastVarDeclIsArray BeforeLastVarDeclIsArray);
+    public void visit(BeforeLastVarDeclNotArray BeforeLastVarDeclNotArray);
+    public void visit(LocalOneVariable LocalOneVariable);
+    public void visit(LocalMultipleVariables LocalMultipleVariables);
+    public void visit(LocalVarDeclType LocalVarDeclType);
+    public void visit(LocalVarDeclarations LocalVarDeclarations);
+    public void visit(OneVariable OneVariable);
+    public void visit(MulitpleVariables MulitpleVariables);
+    public void visit(VarDeclType VarDeclType);
+    public void visit(VarDeclarations VarDeclarations);
+    public void visit(LastConstBool LastConstBool);
+    public void visit(LastConstChar LastConstChar);
+    public void visit(LastConstNumber LastConstNumber);
+    public void visit(BeforeLastConstBool BeforeLastConstBool);
+    public void visit(BeforeLastConstChar BeforeLastConstChar);
+    public void visit(BeforeLastConstNumber BeforeLastConstNumber);
+    public void visit(OneConstant OneConstant);
+    public void visit(MulitpleConstants MulitpleConstants);
+    public void visit(ConstDeclType ConstDeclType);
+    public void visit(ConstDeclarations ConstDeclarations);
+    public void visit(NoDeclarations NoDeclarations);
+    public void visit(ProgramVarDeclarations ProgramVarDeclarations);
+    public void visit(ProgramConstDeclarations ProgramConstDeclarations);
+    public void visit(ProgName ProgName);
+    public void visit(Program Program);
+
+}

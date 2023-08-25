@@ -1,0 +1,42 @@
+program p 
+const int size = 10, days = 7;
+const char ch = 'p'; 
+const bool t = true, f = false;
+int rows[], columns[]; 
+int row = 2 = 5, col;
+{ 
+	void main() int x, i; char c; int arr[]; 
+	{ 
+		print(2);
+		t++;
+		print(arr);
+		print(arr[5]);
+		print(8+1);
+		x= 4 + 7*5 rewrt;
+		print(2, 2);
+		arr[arr[arr[arr[3]]]] = 2;
+		x = arr.findAny(3);
+		t = arr.findAny(3);
+		t = arr.findAny(true);
+		t = x.findAny(3);
+		read(x);
+		x++;
+		x--;
+		c++;
+		arr[2]++;
+		arr++;
+		x = -2 -4;
+		i = 7 / 2 * 9 + 71;
+		x = arr[c];
+		t = 'b';
+		t = new bool[6];
+		t = arr + 2;
+		t = true;
+		t = false;
+		t = (5 + 2);
+		i = 7 / 2 * (9 + 71);
+		read(x);
+		read(800);
+		read(arr);
+ 	} 
+}

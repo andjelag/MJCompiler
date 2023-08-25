@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MJCompiler" default="runObj" basedir=".">
+
+	<target name="disasm">
+		<java classname="rs.etf.pp1.mj.runtime.disasm">
+			<arg value="test/test301.obj" />
+			<classpath>
+				<pathelement location="lib/mj-runtime.jar" />
+			</classpath>
+		</java>
+	</target>
+
+	<target name="runObj" depends="disasm">
+		<java classname="rs.etf.pp1.mj.runtime.Run">
+			<arg value="test/test301.obj" />
+			<classpath>
+				<pathelement location="lib/mj-runtime.jar" />
+			</classpath>
+			<redirector input="test/input.txt" output="izlaz.out" error="izlaz.err" alwayslog="true"/>
+		</java>
+	</target>
+	
+	<target name="disasm1">
+			<java classname="rs.etf.pp1.mj.runtime.disasm">
+				<arg value="test/test01.obj" />
+				<classpath>
+					<pathelement location="lib/mj-runtime.jar" />
+				</classpath>
+			</java>
+		</target>
+
+		<target name="runObj1" depends="disasm1">
+			<java classname="rs.etf.pp1.mj.runtime.Run">
+				<arg value="test/test01.obj" />
+				<classpath>
+					<pathelement location="lib/mj-runtime.jar" />
+				</classpath>
+				<redirector input="test/input.txt" output="test/izlaz.out" error="test/izlaz.err" alwayslog="true"/>
+			</java>
+		</target>
+
+</project>
